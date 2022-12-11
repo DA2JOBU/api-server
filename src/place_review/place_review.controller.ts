@@ -14,7 +14,6 @@ import { PlaceMoodService } from './../place_mood/place_mood.service';
 import { CreatePlaceReviewDto } from './dto/create.place_review.dto';
 import { GetUser } from 'src/decorator/get-user.decorator';
 import { User } from './../auth/Entity/user.entity';
-import { Place } from './../place/Entity/place.entity';
 import { PlaceReviewAndPlace } from './types/placeReviewAndPlace.type';
 import { AuthGuard } from './../auth/security/jwt.Guard';
 import { TransactionInterceptor } from './../utils/transactionInterceptor';
@@ -57,7 +56,9 @@ export class PlaceReviewController {
     @GetUser() kakaoUser: User,
     @TransactionManager() queryRunnerManager: EntityManager,
   ) {
-    const place = await this.checkPlace(createPlaceReviewDto.placeId);
+    const place = await this.placeService.findById(
+      createPlaceReviewDto.placeId,
+    );
     const user = await this.authService.getUserbyKakaoId(kakaoUser.userId);
 
     const newPlaceReview = await this.placeReviewService.createReview(
@@ -78,10 +79,6 @@ export class PlaceReviewController {
     }
 
     return result;
-  }
-
-  async checkPlace(placeId: string): Promise<Place[]> {
-    return await this.placeService.findById(placeId);
   }
 
   // @TODO 한페이지에 나오는 수량 페이징 적용

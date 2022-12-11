@@ -43,13 +43,13 @@ export class PlaceService {
     return place;
   }
 
-  async findById(placeId: string): Promise<Place[]> {
-    const result = await this.placeRepository.find({
+  async findById(placeId: string): Promise<Place> {
+    const result = await this.placeRepository.findOne({
       where: {
         id: placeId,
       },
     });
-    if (result.length < 1) {
+    if (!result) {
       throw new NotFoundException('Can not find place with id');
     }
     return result;
