@@ -6,6 +6,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryColumn,
@@ -29,7 +30,11 @@ export class PlaceReview {
     onDelete: 'CASCADE',
     eager: false,
   })
+  @JoinColumn({ name: 'userId' })
   user: User;
+
+  @Column()
+  userId: string;
 
   @ApiProperty({
     required: false,

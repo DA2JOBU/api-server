@@ -188,4 +188,15 @@ export class AuthService {
       },
     });
   }
+
+  async getUserPlaceReviews(id: string): Promise<any> {
+    return await this.userRepository.find({
+      relations: {
+        place_Reviews: true,
+      },
+      where: {
+        id: id,
+      },
+    });
+  }
 }

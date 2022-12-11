@@ -1,9 +1,9 @@
 import {
   Controller,
   Post,
+  Get,
   Body,
   UseGuards,
-  ConflictException,
   UseInterceptors,
 } from '@nestjs/common';
 import { PlaceReviewService } from './place_review.service';
@@ -81,5 +81,17 @@ export class PlaceReviewController {
 
   async checkPlace(placeId: string): Promise<Place[]> {
     return await this.placeService.findById(placeId);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('my/list')
+  async getMyReview(@GetUser() getUser: User) {
+    const user = await this.authService.getUserbyKakaoId(getUser.userId);
+
+    const placeReviews = await this.placeReviewService.getPlaceReviewIdsByUser(
+      user[0].id,
+    );
+
+    return placeReviews;
   }
 }

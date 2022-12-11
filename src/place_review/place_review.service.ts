@@ -57,4 +57,20 @@ export class PlaceReviewService {
       },
     });
   }
+
+  async getPlaceReviewIdsByUser(userId: string): Promise<PlaceReview[]> {
+    const ret = await this.placeReviewRepository.find({
+      relations: {
+        place: true,
+      },
+      where: {
+        userId: userId,
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+
+    return ret;
+  }
 }
