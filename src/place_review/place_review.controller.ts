@@ -6,15 +6,17 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { EntityManager } from 'typeorm';
 import { PlaceReviewService } from './place_review.service';
+import { PlaceService } from './../place/place.service';
+import { AuthService } from 'src/auth/auth.service';
+import { PlaceMoodService } from './../place_mood/place_mood.service';
 import { CreatePlaceReviewDto } from './dto/create.place_review.dto';
 import { GetUser } from 'src/decorator/get-user.decorator';
 import { User } from './../auth/Entity/user.entity';
-import { AuthGuard } from './../auth/security/jwt.Guard';
-import { PlaceService } from './../place/place.service';
 import { Place } from './../place/Entity/place.entity';
-import { AuthService } from 'src/auth/auth.service';
-import { PlaceMoodService } from './../place_mood/place_mood.service';
+import { PlaceReviewAndPlace } from './types/placeReviewAndPlace.type';
+import { AuthGuard } from './../auth/security/jwt.Guard';
 import { TransactionInterceptor } from './../utils/transactionInterceptor';
 import {
   ApiBody,
@@ -24,7 +26,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { TransactionManager } from 'src/decorator/transaction.decorator';
-import { EntityManager } from 'typeorm';
 
 @ApiTags('Place-review Api')
 @Controller('place-review')
@@ -83,6 +84,17 @@ export class PlaceReviewController {
     return await this.placeService.findById(placeId);
   }
 
+  // @TODO 한페이지에 나오는 수량 페이징 적용
+  @ApiOperation({
+    summary: 'getMyPlaceReviews',
+    description: 'getMyPlaceReviews',
+  })
+  @ApiHeader({ name: 'Authorization', description: 'auth token' })
+  @ApiResponse({
+    status: 200,
+    description: 'placeReviewAndPlace',
+    type: [PlaceReviewAndPlace],
+  })
   @UseGuards(AuthGuard)
   @Get('my/list')
   async getMyReview(@GetUser() getUser: User) {

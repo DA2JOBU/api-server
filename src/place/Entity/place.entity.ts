@@ -100,11 +100,19 @@ export class Place {
   @Column({ name: 'rating_avrg', default: 0, type: 'float' })
   ratingAvrg: number;
 
+  @ApiProperty({
+    description: '등록일',
+    type: Date,
+  })
   @CreateDateColumn({
     type: 'timestamp',
   })
   createdAt: Date;
 
+  @ApiProperty({
+    description: '수정일',
+    type: Date,
+  })
   @UpdateDateColumn({
     type: 'timestamp',
   })
