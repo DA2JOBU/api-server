@@ -1,6 +1,7 @@
 import { User } from 'src/auth/Entity/user.entity';
 import { Place } from 'src/place/Entity/place.entity';
 import {
+  Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
@@ -19,7 +20,11 @@ export class WantPlace {
     onDelete: 'CASCADE',
     eager: false,
   })
+  @JoinColumn({ name: 'userId' })
   user: User;
+
+  @Column()
+  userId: string;
 
   @OneToOne(() => Place, (place) => place.want_place, { eager: false })
   @JoinColumn()

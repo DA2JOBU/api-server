@@ -23,4 +23,20 @@ export class WantPlaceService {
 
     return ret;
   }
+
+  async getWantPlacesByUserId(userId: string): Promise<WantPlace[]> {
+    const ret = await this.wantPlaceRepository.find({
+      relations: {
+        place: true,
+      },
+      where: {
+        userId: userId,
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+
+    return ret;
+  }
 }

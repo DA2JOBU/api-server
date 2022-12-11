@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/security/jwt.Guard';
 import {
   ApiBody,
@@ -14,6 +14,7 @@ import { WantPlaceService } from './want_place.service';
 import { CreateWantPlace } from './dto/createWantPlace.dto';
 import { GetUser } from '../decorator/get-user.decorator';
 import { WantPlaceResponse } from './types/createWantPlaceResponse.type';
+import { WantPlaceAndPlace } from './types/wantPlaceAndPlace.type';
 
 @ApiTags('Want-place Api')
 @Controller('want-place')
@@ -40,10 +41,10 @@ export class WantPlaceController {
   @Post()
   async createWantPlace(
     @Body() addWantPlace: CreateWantPlace,
-    @GetUser() user: User,
+    @GetUser() getUser: User,
   ) {
     const place = await this.placeService.findById(addWantPlace.placeId);
-    const userData = await this.authService.getUserbyKakaoId(user.userId);
+    const userData = await this.authService.getUserbyKakaoId(getUser.userId);
 
     const wantPlace = await this.wantPlaceService.createWantPlace(
       place,
@@ -53,5 +54,24 @@ export class WantPlaceController {
     return {
       id: wantPlace.id,
     };
+  }
+
+  @ApiOperation({ summary: 'getMyWantPlace', description: 'getMyWantPlace' })
+  @ApiHeader({ name: 'Authorization', description: 'auth token' })
+  @ApiResponse({
+    status: 200,
+    description: 'placeReviewAndPlace',
+    type: [WantPlaceAndPlace],
+  })
+  @UseGuards(AuthGuard)
+  @Get('my/list')
+  async getMyWantPlace(@GetUser() getUser: User) {
+    const user = await this.authService.getUserbyKakaoId(getUser.userId);
+
+    const wantPlaces = await this.wantPlaceService.getWantPlacesByUserId(
+      user[0].id,
+    );
+
+    return wantPlaces;
   }
 }

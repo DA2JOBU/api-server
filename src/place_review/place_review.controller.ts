@@ -97,7 +97,7 @@ export class PlaceReviewController {
   async getMyReview(@GetUser() getUser: User) {
     const user = await this.authService.getUserbyKakaoId(getUser.userId);
 
-    const placeReviews = await this.placeReviewService.getPlaceReviewIdsByUser(
+    const placeReviews = await this.placeReviewService.getPlaceReviewsByUserId(
       user[0].id,
     );
 

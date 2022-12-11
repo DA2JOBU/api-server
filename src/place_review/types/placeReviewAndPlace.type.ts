@@ -11,7 +11,7 @@ export class PlaceReviewAndPlace {
   id: string;
 
   @ApiProperty({
-    description: 'PlaceReview ID',
+    description: 'User ID',
     type: String,
   })
   @IsString()
