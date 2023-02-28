@@ -196,4 +196,11 @@ export class PlaceController {
 
     return await this.placeService.findByIdForSearch(place.id);
   }
+
+  @Version('2')
+  @Get('/exists/:kakaoId')
+  async isExistsPlace(@Param('kakaoId') kakaoId: string): Promise<boolean> {
+    const ret = await this.placeService.isExistsByKakaoId(kakaoId);
+    return !!ret;
+  }
 }
